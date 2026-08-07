@@ -1,0 +1,80 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+<h2 class="text-center my-4">Welcome to the Inventory Management System</h2>
+
+
+<h3 class="text-center mb-4">Order Status Summary</h3>
+
+<div class="row">
+
+    <div class="col-12 col-md-4 mb-3">
+        <div class="card shadow-sm border-info">
+            <div class="card-body text-center">
+                <i class="fa fa-dot-circle-o text-info fa-3x mb-3"></i>
+                <h5 class="card-title">Pending</h5>
+                <p class="card-text">
+                    <span class="h4">{{ status_count.pending }}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-12 col-md-4 mb-3">
+        <div class="card shadow-sm border-warning">
+            <div class="card-body text-center">
+                <i class="fa fa-dot-circle-o text-warning fa-3x mb-3"></i>
+                <h5 class="card-title">Processing</h5>
+                <p class="card-text">
+                    <span class="h4">{{ status_count.processing }}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-12 col-md-4 mb-3">
+        <div class="card shadow-sm border-purple">
+            <div class="card-body text-center">
+                <i class="fa fa-dot-circle-o text-purple fa-3x mb-3"></i>
+                <h5 class="card-title">Shipped</h5>
+                <p class="card-text">
+                    <span class="h4">{{ status_count.shipped }}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-12 col-md-4 mb-3">
+        <div class="card shadow-sm border-success">
+            <div class="card-body text-center">
+                <i class="fa fa-dot-circle-o text-success fa-3x mb-3"></i>
+                <h5 class="card-title">Delivered</h5>
+                <p class="card-text">
+                    <span class="h4">{{ status_count.delivered }}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-12 col-md-4 mb-3">
+        <div class="card shadow-sm border-danger">
+            <div class="card-body text-center">
+                <i class="fa fa-dot-circle-o text-danger fa-3x mb-3"></i>
+                <h5 class="card-title">Cancelled</h5>
+                <p class="card-text">
+                    <span class="h4">{{ status_count.cancelled }}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-4">
+    <a href="{% url 'order:order-list' %}" class="btn btn-primary btn-lg">View Orders</a>
+</div>
+
+{% endblock %}
