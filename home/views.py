@@ -1,32 +1,17 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import User
 from django.db.models import Count
 from django.shortcuts import redirect, render
 
 from order.models import Order
 
-from .forms import LoginForm, UserSignUpForm
+from .forms import UserSignUpForm
 
 
 def login_view(request):
-    if request.method == "POST":
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            user = authenticate(
-                request,
-                username=form.cleaned_data["username"],
-                password=form.cleaned_data["password"],
-            )
-            if user is not None:
-                login(request, user)
-                return redirect("home:dashboard")
-
-            messages.error(request, "Invalid username or password.")
-    else:
-        form = LoginForm()
-
-    return render(request, "home/login.html", {"form": form})
+    return render(request, "home/login.html")
 
 
 def signup_view(request):
@@ -34,27 +19,36 @@ def signup_view(request):
         form = UserSignUpForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.set_password(form.cleaned_data["password"])
+            user.password = make_password(form.cleaned_data["password"])
             user.save()
             messages.success(request, "Account created successfully. Please log in.")
             return redirect("home:login")
     else:
         form = UserSignUpForm()
-
     return render(request, "home/signup.html", {"form": form})
 
 
-@login_required
 def dashboard_view(request):
-    counts = dict(Order.objects.values_list("status").annotate(total=Count("status")))
+    if not request.user.is_authenticated:
+        return redirect("home:login")
+    total_users = User.objects.count()
+    total_orders = Order.objects.count()
+    orders_by_status = Order.objects.values("status").annotate(count=Count("status"))
     status_count = {
-        "pending": counts.get(Order.OrderStatus.PENDING, 0),
-        "processing": counts.get(Order.OrderStatus.PROCESSING, 0),
-        "shipped": counts.get(Order.OrderStatus.SHIPPED, 0),
-        "delivered": counts.get(Order.OrderStatus.DELIVERED, 0),
-        "cancelled": counts.get(Order.OrderStatus.CANCELLED, 0),
+        "pending": 0,
+        "processing": 0,
+        "shipped": 0,
+        "delivered": 0,
+        "cancelled": 0,
     }
-    return render(request, "home/dashboard.html", {"status_count": status_count})
+    status_count.update({item["status"]: item["count"] for item in orders_by_status})
+    context = {
+        "total_users": total_users,
+        "total_orders": total_orders,
+        "orders_by_status": orders_by_status,
+        "status_count": status_count,
+    }
+    return render(request, "home/dashboard.html", context)
 
 
 def logout_view(request):

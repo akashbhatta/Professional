@@ -1,30 +1,237 @@
+{% extends 'home/auth_base.html' %}
+
+{% block title %}Log In | IMS{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card shadow-lg">
-                <div class="card-body">
-                    <h2 class="text-center mb-4">Login</h2>
+<style>
+    .login-page {
+        --login-primary: #2563eb;
+        --login-primary-dark: #1d4ed8;
+        --login-text: #172033;
+        --login-muted: #667085;
+        --login-border: #d0d5dd;
+        min-height: calc(100vh - 160px);
+        display: flex;
+        align-items: center;
+        padding: 32px 12px;
+    }
 
-                    <form method="post">
+    .login-card {
+        overflow: hidden;
+        border: 1px solid #e9edf3;
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 18px 45px rgba(16, 24, 40, 0.1);
+        animation: login-enter 0.45s ease-out both;
+    }
+
+    .login-card .card-body {
+        padding: 36px;
+    }
+
+    .login-title {
+        margin-bottom: 8px;
+        color: var(--login-text);
+        font-size: clamp(1.65rem, 4vw, 2rem);
+        font-weight: 700;
+        letter-spacing: -0.025em;
+    }
+
+    .login-subtitle {
+        margin-bottom: 28px;
+        color: var(--login-muted);
+        font-size: 0.95rem;
+    }
+
+    .login-alert {
+        border: 0;
+        border-radius: 9px;
+        font-size: 0.9rem;
+    }
+
+    .login-form .form-group {
+        margin-bottom: 18px;
+    }
+
+    .login-form label {
+        display: block;
+        margin-bottom: 7px;
+        color: #344054;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .login-form input[type="text"],
+    .login-form input[type="password"] {
+        width: 100%;
+        min-height: 46px;
+        padding: 10px 13px;
+        color: var(--login-text);
+        background-color: #fff;
+        border: 1px solid var(--login-border);
+        border-radius: 9px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .login-form input::placeholder {
+        color: #98a2b3;
+    }
+
+    .login-form input[type="text"]:hover,
+    .login-form input[type="password"]:hover {
+        border-color: #98a2b3;
+    }
+
+    .login-form input[type="text"]:focus,
+    .login-form input[type="password"]:focus {
+        outline: 0;
+        border-color: var(--login-primary);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.13);
+    }
+
+    .login-field-error {
+        display: block;
+        margin-top: 6px;
+        color: #b42318;
+        font-size: 0.82rem;
+        font-weight: 500;
+    }
+
+    .login-options {
+        display: flex;
+        align-items: center;
+        margin: 2px 0 20px;
+        color: var(--login-muted);
+        font-size: 0.88rem;
+    }
+
+    .login-remember {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 8px;
+        margin: 0 !important;
+        cursor: pointer;
+        font-weight: 400 !important;
+    }
+
+    .login-remember input {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--login-primary);
+    }
+
+    .login-submit {
+        min-height: 46px;
+        border-color: var(--login-primary);
+        border-radius: 9px;
+        background-color: var(--login-primary);
+        font-weight: 600;
+        transition: background-color 0.2s ease, border-color 0.2s ease,
+            box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .login-submit:hover {
+        border-color: var(--login-primary-dark);
+        background-color: var(--login-primary-dark);
+        box-shadow: 0 8px 18px rgba(37, 99, 235, 0.24);
+        transform: translateY(-1px);
+    }
+
+    .login-submit:focus-visible {
+        outline: 0;
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.22);
+    }
+
+    .login-submit:active {
+        transform: translateY(0);
+    }
+
+    .login-signup {
+        margin: 22px 0 0;
+        color: var(--login-muted);
+        font-size: 0.9rem;
+    }
+
+    .login-signup a {
+        color: var(--login-primary-dark);
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .login-signup a:hover {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+
+    @keyframes login-enter {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 576px) {
+        .login-page {
+            min-height: auto;
+            padding: 18px 0;
+        }
+
+        .login-card .card-body {
+            padding: 26px 20px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+        .login-card,
+        .login-submit,
+        .login-form input {
+            animation: none;
+            transition: none;
+        }
+    }
+</style>
+
+<div class="container login-page">
+    <div class="row justify-content-center w-100">
+        <div class="col-lg-5 col-md-7">
+            <div class="card login-card">
+                <div class="card-body">
+                    <h2 class="text-center login-title">Welcome back</h2>
+                    <p class="text-center login-subtitle">Log in to continue to your account.</p>
+
+                    <form method="post" class="login-form">
                         {% csrf_token %}
 
-                        {% for field in form %}
-                        <div class="form-group mb-3">
-                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            {{ field }}
-                            {% if field.errors %}
-                            <small class="text-danger">{{ field.errors|striptags }}</small>
-                            {% endif %}
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" placeholder="Enter your username"
+                                autocomplete="username">
                         </div>
-                        {% endfor %}
 
-                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" placeholder="Enter your password"
+                                autocomplete="current-password">
+                        </div>
+
+                        <div class="login-options">
+                            <label class="login-remember" for="remember-me">
+                                <input id="remember-me" name="remember_me" type="checkbox">
+                                Keep me signed in
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 login-submit">Log In</button>
                     </form>
 
-                    <p class="text-center mt-3">
-                        Need an account? <a href="{% url 'home:signup' %}">Sign up</a>
+                    <p class="text-center login-signup">
+                        Don’t have an account? <a href="{% url 'home:signup' %}">Sign up</a>
                     </p>
                 </div>
             </div>

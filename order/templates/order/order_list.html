@@ -1,0 +1,144 @@
+{% extends "home/base.html" %}
+
+{% block content %}
+<style>
+    .order-list-card {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+        padding: 28px;
+    }
+
+    .order-list-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .order-list-header h2 {
+        margin: 0;
+        font-weight: 600;
+        font-size: 1.5rem;
+        color: #212529;
+    }
+
+    .order-list-header .text-muted {
+        font-size: 0.9rem;
+    }
+
+    .order-table {
+        margin-bottom: 0;
+    }
+
+    .order-table thead th {
+        background-color: #343a40;
+        color: #fff;
+        border: none;
+        font-weight: 500;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 14px 16px;
+    }
+
+    .order-table thead th:first-child {
+        border-top-left-radius: 6px;
+    }
+
+    .order-table thead th:last-child {
+        border-top-right-radius: 6px;
+    }
+
+    .order-table tbody td {
+        padding: 14px 16px;
+        vertical-align: middle;
+        color: #495057;
+    }
+
+    .order-table tbody tr {
+        transition: background-color 0.15s ease-in-out;
+    }
+
+    .order-table tbody tr:hover {
+        background-color: #f1f3f5;
+    }
+
+    .order-table .order-id {
+        font-weight: 600;
+        color: #212529;
+    }
+
+    .order-table .actions {
+        white-space: nowrap;
+    }
+
+    .order-table .actions a {
+        margin-right: 6px;
+    }
+
+    .order-table .actions a:last-child {
+        margin-right: 0;
+    }
+
+    .order-list-empty {
+        text-align: center;
+        padding: 48px 16px;
+        color: #868e96;
+    }
+</style>
+
+<div class="order-list-card">
+    <div class="order-list-header">
+        <div>
+            <h2>Order List</h2>
+            <span class="text-muted">{{ orders|length }} order{{ orders|length|pluralize }} total</span>
+        </div>
+        <a href="{% url 'order:order-create' %}" class="btn btn-primary">+ Add Order</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle order-table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Order Date</th>
+                    <th>Status</th>
+                    <th>Products</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td class="order-id">#{{ order.order_id }}</td>
+                    <td>{{ order.customer }}</td>
+                    <td>{{ order.order_date|default:"-" }}</td>
+                    <td><span class="badge bg-info-subtle text-info-emphasis">{{ order.status }}</span></td>
+                    <td>
+                        {% for product in order.order_details.all %}
+                            {{ product }}{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                            -
+                        {% endfor %}
+                    </td>
+                    <td class="actions">
+                        <a href="{% url 'order:order-update' order.order_id %}" class="btn btn-sm btn-outline-primary">Update</a>
+                        <a href="{% url 'order:order-delete' order.order_id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="order-list-empty">No orders found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

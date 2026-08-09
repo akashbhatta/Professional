@@ -1,0 +1,15 @@
+{% extends "home/base.html" %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h2 class="card-title mb-4">{% if object %}Update Customer{% else %}Add Customer{% endif %}</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">{% if object %}Update Customer{% else %}Add Customer{% endif %}</button>
+            <a href="{% url 'customer-list' %}" class="btn btn-outline-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

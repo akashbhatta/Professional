@@ -8,7 +8,7 @@ from .forms import CustomerForm
 class CustomerListView(LoginRequiredMixin, ListView):
     model = Customer
     template_name = 'customer/customer_list.html'
-    context_object_name = 'users'
+    context_object_name = 'customers'
 
 class CustomerCreateView(LoginRequiredMixin, CreateView):
     model = Customer

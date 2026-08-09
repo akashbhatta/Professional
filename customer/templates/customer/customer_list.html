@@ -1,0 +1,136 @@
+{% extends "home/base.html" %}
+
+{% block content %}
+<style>
+    .customer-list-card {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+        padding: 28px;
+    }
+
+    .customer-list-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .customer-list-header h2 {
+        margin: 0;
+        font-weight: 600;
+        font-size: 1.5rem;
+        color: #212529;
+    }
+
+    .customer-list-header .text-muted {
+        font-size: 0.9rem;
+    }
+
+    .customer-table {
+        margin-bottom: 0;
+    }
+
+    .customer-table thead th {
+        background-color: #343a40;
+        color: #fff;
+        border: none;
+        font-weight: 500;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 14px 16px;
+    }
+
+    .customer-table thead th:first-child {
+        border-top-left-radius: 6px;
+    }
+
+    .customer-table thead th:last-child {
+        border-top-right-radius: 6px;
+    }
+
+    .customer-table tbody td {
+        padding: 14px 16px;
+        vertical-align: middle;
+        color: #495057;
+    }
+
+    .customer-table tbody tr {
+        transition: background-color 0.15s ease-in-out;
+    }
+
+    .customer-table tbody tr:hover {
+        background-color: #f1f3f5;
+    }
+
+    .customer-table .customer-name {
+        font-weight: 600;
+        color: #212529;
+    }
+
+    .customer-table .actions {
+        white-space: nowrap;
+    }
+
+    .customer-table .actions a {
+        margin-right: 6px;
+    }
+
+    .customer-table .actions a:last-child {
+        margin-right: 0;
+    }
+
+    .customer-list-empty {
+        text-align: center;
+        padding: 48px 16px;
+        color: #868e96;
+    }
+</style>
+
+<div class="customer-list-card">
+    <div class="customer-list-header">
+        <div>
+            <h2>Customer List</h2>
+            <span class="text-muted">{{ customers|length }} customer{{ customers|length|pluralize }} total</span>
+        </div>
+        <a href="{% url 'customer-create' %}" class="btn btn-primary">+ Add Customer</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle customer-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in customers %}
+                <tr>
+                    <td class="customer-name">{{ customer.name }}</td>
+                    <td>{{ customer.email }}</td>
+                    <td>{{ customer.phone }}</td>
+                    <td>{{ customer.address }}</td>
+                    <td class="actions">
+                        <a href="{% url 'customer-update' customer.id %}" class="btn btn-sm btn-outline-primary">Update</a>
+                        <a href="{% url 'customer-delete' customer.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="customer-list-empty">No customers found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
