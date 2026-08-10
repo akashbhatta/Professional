@@ -18,15 +18,15 @@ class SupplierListView(LoginRequiredMixin, ListView):
 class SupplierCreateView(LoginRequiredMixin, CreateView):
     model = Supplier
     form_class = SupplierForm
-    success_url = reverse_lazy("suppliers:supplier-list")
+    success_url = reverse_lazy("supplier-list")
 
 
 class SupplierUpdateView(LoginRequiredMixin, UpdateView):
     model = Supplier
     form_class = SupplierForm
-    success_url = reverse_lazy("suppliers:supplier-list")
+    success_url = reverse_lazy("supplier-list")
 
 
 class SupplierDeleteView(LoginRequiredMixin, DeleteView):
     model = Supplier
-    success_url = reverse_lazy("suppliers:supplier-list")
+    success_url = reverse_lazy("supplier-list")

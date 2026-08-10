@@ -1,17 +1,48 @@
 from django.contrib import messages
-from django.contrib.auth import logout
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.db.models import Count
 from django.shortcuts import redirect, render
+from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from order.models import Order
 
-from .forms import UserSignUpForm
+from .forms import LoginForm, UserSignUpForm
 
 
 def login_view(request):
-    return render(request, "home/login.html")
+    if request.user.is_authenticated:
+        return redirect("home:dashboard")
+
+    next_url = request.POST.get("next") or request.GET.get("next")
+    if not url_has_allowed_host_and_scheme(
+        url=next_url,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        next_url = reverse("home:dashboard")
+
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = authenticate(
+                request,
+                username=form.cleaned_data["username"],
+                password=form.cleaned_data["password"],
+            )
+            if user is not None:
+                login(request, user)
+                if not request.POST.get("remember_me"):
+                    request.session.set_expiry(0)
+                return redirect(next_url)
+
+            form.add_error(None, "Please enter a correct username and password.")
+    else:
+        form = LoginForm()
+
+    return render(request, "home/login.html", {"form": form, "next": next_url})
 
 
 def signup_view(request):

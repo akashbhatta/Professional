@@ -103,7 +103,7 @@
             <h2>User List</h2>
             <span class="text-muted">{{ users|length }} user{{ users|length|pluralize }} total</span>
         </div>
-        <a href="{% url 'add_user' %}" class="btn btn-primary">+ Add User</a>
+        <a href="{% url 'user-create' %}" class="btn btn-primary">+ Add User</a>
     </div>
 
     <div class="table-responsive">
@@ -127,8 +127,8 @@
                     <td>{{ user.phone }}</td>
                     <td>{{ user.address }}</td>
                     <td class="actions">
-                        <a href="{% url 'update_user' user.id %}" class="btn btn-sm btn-outline-primary">Update</a>
-                        <a href="{% url 'delete_user' user.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                        <a href="{% url 'user-update' user.id %}" class="btn btn-sm btn-outline-primary">Update</a>
+                        <a href="{% url 'user-delete' user.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
                     </td>
                 </tr>
                 {% empty %}

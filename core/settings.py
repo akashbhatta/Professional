@@ -47,6 +47,10 @@ PROJECT_APPS = [
 
 INSTALLED_APPS +=  THIRD_PARTY_APPS + PROJECT_APPS
 
+LOGIN_URL = "home:login"
+LOGIN_REDIRECT_URL = "home:dashboard"
+LOGOUT_REDIRECT_URL = "home:login"
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

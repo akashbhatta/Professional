@@ -4,14 +4,21 @@ from .models import Category, Product
 
 
 class ProductForm(forms.ModelForm):
-    product_name = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Enter Product Name"}), label="Product Name")
-    description = forms.CharField(required=False, widget=forms.Textarea(attrs={"placeholder": "Enter Product Description", "rows": 4}), label="Description")
-    price = forms.DecimalField(min_value=0, widget=forms.NumberInput(attrs={"placeholder": "Enter Price", "step": "0.01"}), label="Price")
-    quantity = forms.IntegerField(min_value=0, widget=forms.NumberInput(attrs={"placeholder": "Enter Quantity"}), label="Quantity")
-
     class Meta:
         model = Product
-        fields = "__all__"
+        fields = ["name", "price", "quantity", "category"]
+        labels = {
+            "name": "Product Name",
+            "price": "Price",
+            "quantity": "Quantity",
+            "category": "Category",
+        }
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "Enter Product Name"}),
+            "price": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Enter Price", "step": "0.01"}),
+            "quantity": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Enter Quantity"}),
+            "category": forms.TextInput(attrs={"class": "form-control", "placeholder": "Enter Category"}),
+        }
 
 
 class CategoryForm(forms.ModelForm):

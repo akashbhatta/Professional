@@ -113,7 +113,7 @@
         <h2>IMS Dashboard</h2>
         <ul>
             <li>
-                <a href="{% url 'home:dashboard' %}" class="{% if request.path == '/' %}active{% endif %}">Dashboard</a>
+                <a href="{% url 'home:dashboard' %}" class="{% if '/dashboard/' in request.path %}active{% endif %}">Dashboard</a>
             </li>
             <li>
                 <a href="{% url 'order:order-list' %}" class="{% if '/order/orders/' in request.path %}active{% endif %}">Orders</a>

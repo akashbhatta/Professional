@@ -10,15 +10,14 @@ class Supplier(models.Model):
     address = models.TextField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
 
-class Meta:
-    db_table = "supplier"
-    verbose_name = "Supplier"
-    verbose_name_plural = "Suppliers"
-    # db_indexes =[
-    #     models.Index(fields=['name']),
-    #     models.Index(fields=['email'])
-    # ]
+    class Meta:
+        verbose_name = "Supplier"
+        verbose_name_plural = "Suppliers"
+        # db_indexes =[
+        #     models.Index(fields=['name']),
+        #     models.Index(fields=['email'])
+        # ]
 
-def __str__(self):
-    return self.name    
+    def __str__(self):
+        return self.name
     
