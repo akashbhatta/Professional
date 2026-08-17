@@ -72,7 +72,9 @@ def dashboard_view(request):
         "delivered": 0,
         "cancelled": 0,
     }
-    status_count.update({item["status"]: item["count"] for item in orders_by_status})
+    status_count.update(
+        {item["status"].lower(): item["count"] for item in orders_by_status}
+    )
     context = {
         "total_users": total_users,
         "total_orders": total_orders,
